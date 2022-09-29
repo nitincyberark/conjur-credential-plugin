@@ -65,7 +65,9 @@ public class ConjurAPI {
 
 	public static String getAuthorizationToken(OkHttpClient client, ConjurConfiguration configuration,
 			ModelObject context) throws IOException {
-	
+		LOGGER.log(Level.FINE, ">>>>>>>>>>>>>>Check begining context: "+ (context));
+		LOGGER.log(Level.FINE, ">>>>>>>>>>>>>>Check begining configuration: "+ (configuration.getApplianceURL()));
+		LOGGER.log(Level.FINE, ">>>>>>>>>>>>>>Check begining client: "+ (client));
 		String resultingToken = null;
 
 		List<UsernamePasswordCredentials> availableCredentials = null;
@@ -174,9 +176,11 @@ public class ConjurAPI {
 		ConjurAuthnInfo conjurAuthn = getConjurAuthnInfo(configuration, null, null);
 
 		LOGGER.log(Level.FINEST, "Fetching secret from Conjur");
+		
 		Request request = new Request.Builder().url(
 				String.format("%s/secrets/%s/variable/%s", conjurAuthn.applianceUrl, conjurAuthn.account, variablePath))
 				.get().addHeader("Authorization", "Token token=\"" + authToken + "\"").build();
+		
 
 		Response response = client.newCall(request).execute();
 		result = response.body().string();

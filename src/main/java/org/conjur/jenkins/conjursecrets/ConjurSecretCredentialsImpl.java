@@ -75,8 +75,13 @@ public class ConjurSecretCredentialsImpl extends BaseStandardCredentials impleme
 		try {
 			// Get Http Client
 			OkHttpClient client = ConjurAPIUtils.getHttpClient(this.conjurConfiguration);
+			LOGGER.log(Level.FINE, ">>>>>>>client: " + client);
+			LOGGER.log(Level.FINE, ">>>>>>>storeContext: " + storeContext);
+			LOGGER.log(Level.FINE, ">>>>>>>context: " + context);
 			// Authenticate to Conjur
-			String authToken = ConjurAPI.getAuthorizationToken(client, this.conjurConfiguration, context);
+			//setContext(context);
+			String authToken = ConjurAPI.getAuthorizationToken(client, this.conjurConfiguration, storeContext);
+			LOGGER.log(Level.FINE, ">>>>>>>authToken: " + authToken);
 			// Retrieve secret from Conjur
 			String secretString = ConjurAPI.getSecret(client, this.conjurConfiguration, authToken, this.variablePath);
 			result = secretString;
@@ -98,14 +103,15 @@ public class ConjurSecretCredentialsImpl extends BaseStandardCredentials impleme
 	}
 
 	public void setContext(ModelObject context) {
-		LOGGER.log(Level.FINEST, "Setting context");
+		LOGGER.log(Level.FINEST, "Setting context:>>>>>>>"+context);
 		this.context = context;
 		setConjurConfiguration(ConjurAPI.getConfigurationFromContext(context, storeContext));
 	}
 
 	public void setStoreContext(ModelObject storeContext) {
+		LOGGER.log(Level.FINEST, "Setting setStoreContext:>>>>>>>"+storeContext);
 		LOGGER.log(Level.FINEST, "Setting store context");
-		this.context = storeContext;
+		this.storeContext = storeContext;
 		setConjurConfiguration(ConjurAPI.getConfigurationFromContext(context, storeContext));
 	}
 
